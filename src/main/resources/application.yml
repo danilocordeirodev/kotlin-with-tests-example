@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    username: ${DB_APP_USER}
+    password: ${DB_APP_PASSWORD}
+  flyway:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    user: ${DB_FLYWAY_USER}
+    password: ${DB_FLYWAY_PASSWORD}
+    defaultSchema: kotlin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
