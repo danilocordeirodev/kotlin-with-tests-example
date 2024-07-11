@@ -81,6 +81,85 @@ class PersonControllerTest : AbstractIntegrationTest() {
         assertEquals("Male", createdPerson.gender)
     }
 
+    @Test
+    @Order(3)
+    fun testUpdate() {
+        person!!.lastName = "Chapada"
+
+        val content: String = given().spec(specification)
+            .contentType(TestsConfig.CONTENT_TYPE)
+            .body(person)
+            .`when`()
+            .put()
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+
+        val updatedPerson = objectMapper!!.readValue(content, Person::class.java)
+
+        person = updatedPerson
+
+        assertNotNull(updatedPerson.id)
+        assertNotNull(updatedPerson.firstName)
+        assertNotNull(updatedPerson.lastName)
+        assertNotNull(updatedPerson.address)
+        assertNotNull(updatedPerson.gender)
+        assertTrue(updatedPerson.id!! > 0)
+
+        assertEquals("Calango", updatedPerson.firstName)
+        assertEquals("Chapada", updatedPerson.lastName)
+        assertEquals("Rua Ipiranga", updatedPerson.address)
+        assertEquals("Male", updatedPerson.gender)
+    }
+
+    @Test
+    @Order(4)
+    fun testFindById() {
+
+        val content: String = given().spec(specification)
+            .contentType(TestsConfig.CONTENT_TYPE)
+                .pathParams("id", person!!.id)
+            .`when`()
+                .get("{id}")
+            .then()
+                .statusCode(200)
+                .extract()
+                    .body()
+                    .asString()
+
+        val foundPerson = objectMapper!!.readValue(content, Person::class.java)
+
+        person = foundPerson
+
+        assertNotNull(foundPerson.id)
+        assertNotNull(foundPerson.firstName)
+        assertNotNull(foundPerson.lastName)
+        assertNotNull(foundPerson.address)
+        assertNotNull(foundPerson.gender)
+        assertTrue(foundPerson.id!! > 0)
+
+        assertEquals(person!!.id, foundPerson.id)
+        assertEquals(person!!.firstName, foundPerson.firstName)
+        assertEquals(person!!.lastName,foundPerson.lastName)
+        assertEquals(person!!.address, foundPerson.address)
+        assertEquals(person!!.gender, foundPerson.gender)
+    }
+
+    @Test
+    @Order(5)
+    fun testDelete () {
+
+        given().spec(specification)
+            .contentType(TestsConfig.CONTENT_TYPE)
+            .pathParams("id", person!!.id)
+            .`when`()
+                .delete("{id}")
+            .then()
+            .statusCode(204)
+
+    }
 
     private fun mockPerson() {
         person?.firstName = "Calango"
