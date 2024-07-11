@@ -1,6 +1,8 @@
+server:
+  port: 8889
 spring:
   datasource:
-    driverClassName: org.postgresql.Driveradd
+    driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
