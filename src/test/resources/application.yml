@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driveradd
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
