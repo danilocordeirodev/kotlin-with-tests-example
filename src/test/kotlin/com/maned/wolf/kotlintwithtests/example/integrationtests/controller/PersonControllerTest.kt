@@ -5,6 +5,7 @@ import com.maned.wolf.kotlintwithtests.example.model.Person
 import com.maned.wolf.kotlintwithtests.example.testcontainers.AbstractIntegrationTest
 import io.restassured.RestAssured.given
 import io.restassured.builder.RequestSpecBuilder
+import io.restassured.common.mapper.TypeRef
 import io.restassured.filter.log.LogDetail
 import io.restassured.filter.log.RequestLoggingFilter
 import io.restassured.filter.log.ResponseLoggingFilter
@@ -159,6 +160,38 @@ class PersonControllerTest : AbstractIntegrationTest() {
             .then()
             .statusCode(204)
 
+    }
+
+    @Test
+    @Order(6)
+    fun testFindAll() {
+
+        val content = given().spec(specification)
+            .contentType(TestsConfig.CONTENT_TYPE)
+                .`when`()
+                .get()
+            .then()
+                .statusCode(200)
+                    .extract()
+                    .body()
+                    .`as`(object : TypeRef<List<Person?>?>(){})
+
+        val foundPersonOne = content?.get(0)
+
+        person = foundPersonOne
+
+        assertNotNull(foundPersonOne!!.id)
+        assertNotNull(foundPersonOne.firstName)
+        assertNotNull(foundPersonOne.lastName)
+        assertNotNull(foundPersonOne.address)
+        assertNotNull(foundPersonOne.gender)
+        assertTrue(foundPersonOne.id!! > 0)
+
+        assertEquals(1, foundPersonOne.id)
+        assertEquals("Leandro", foundPersonOne.firstName)
+        assertEquals("Uberlândia - Minas Gerais - Brasil", foundPersonOne.address)
+        assertEquals("Costa", foundPersonOne.lastName)
+        assertEquals("Male", foundPersonOne.gender)
     }
 
     private fun mockPerson() {
